@@ -43,8 +43,8 @@ public class SimpleServlet extends SlingSafeMethodsServlet {
     @Override
     protected void doGet(final SlingHttpServletRequest req,
                          final SlingHttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("Ab run hogaaa: " + configurationService.getPassingMarks());
-        //resp.getWriter().write("This is second question " + studentClassService.addStudent(1, "Abhinav", 90, 23));
+        resp.getWriter().write("Running: " + configurationService.getPassingMarks());
+        //resp.getWriter().write("This is second question " + studentClassService.addStudent(1, "Shruti", 90, 23));
         //resp.getWriter().write("Again " + studentClassService.getAllStudents());
     }
 }
