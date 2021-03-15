@@ -1,38 +1,45 @@
-package com.mysite.core.services.impl;
+package com.mysite.core.services.implementation;
 
+import com.mysite.core.services.Configuration1;
 import com.mysite.core.services.ConfigurationService;
 import com.mysite.core.services.Student;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.metatype.annotations.Designate;
 
-
-import com.mysite.core.services.Configuration;
-
 import java.util.List;
 
-@Component(service=ConfigurationService.class)
-@Designate(ocd=Configuration.class)
+@Component(service = ConfigurationService.class)
+@Designate(ocd = Configuration1.class)
 public class ConfigurationServiceImpl implements ConfigurationService {
 
-    private int allowedStudents;
-    private int passingMarks;
+    private int student_limit;
+    private double passing_marks;
 
     @Activate
-    protected void activate(Configuration config) {
-        allowedStudents = config.allowed_students();
-        passingMarks = config.passing_marks();
+    public void activate(Configuration1 config)
+    {
+        student_limit=config.get_studentlimit();
+        passing_marks=config.get_passingmarks();
+
     }
 
 
     @Override
-    public boolean isClassLimitReached(List<Student> list) {
-        return list.size() < allowedStudents;
+    public boolean isClassLimitReached(List<Student> studentlist) {
+
+        if(studentlist.size() !=0)
+        {
+            if (student_limit == studentlist.size())
+                return true;
+        }
+
+        return false;
     }
 
     @Override
-    public int getPassingMarks() {
-        return passingMarks;
+    public double getPassingMarks() {
+        return passing_marks;
     }
 
 }

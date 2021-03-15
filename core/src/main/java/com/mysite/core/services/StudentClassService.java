@@ -1,19 +1,14 @@
 package com.mysite.core.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public interface StudentClassService extends ConfigurationService{
-    List<Student> list = new ArrayList<>();
+public interface StudentClassService
+{
 
-    void addStudent(int id, String name, int marks, int age);
-
+    void  addStudent(Student student);
     void deleteStudent(int id);
-
     boolean isStudentPassed(int id);
-
     Student getStudent(int id);
-
     List<Student> getAllStudents();
 
 }

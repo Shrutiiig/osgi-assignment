@@ -1,65 +1,51 @@
-package com.mysite.core.services.impl;
+package com.mysite.core.services.implementation;
 
-import com.mysite.core.services.Configuration;
+import com.mysite.core.services.Configuration2;
+import com.mysite.core.services.ConfigurationService;
 import com.mysite.core.services.Student;
 import com.mysite.core.services.StudentClassService;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.Designate;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Component(service= StudentClassService.class)
-@Designate(ocd=Configuration.class)
-class StudentClassServiceImpl implements StudentClassService{
+@Component(service = {StudentClassService.class })
+@Designate(ocd= Configuration2.class)
+public class StudentClassServiceImpl implements StudentClassService
+{
+    private List<Student> studentList=new ArrayList<Student>();
 
-    private int allowedStudents;
-    private int passingMarks;
-    private int studentID;
-    private String studentName;
-    private int studentMarks;
-    private int studentAge;
-
-    @Activate
-    protected void activate(Configuration config) {
-        allowedStudents = config.allowed_students();
-        passingMarks = config.passing_marks();
-        studentID = config.student_id();
-        studentName = config.student_name();
-        studentMarks = config.student_marks();
-        studentAge = config.student_age();
-    }
-
+    @Reference
+    private ConfigurationService config;
 
     @Override
-    public void addStudent(int id, String name, int marks, int age) {
-        Student s = new Student(id, name, marks, age);
-        if(list.size() < allowedStudents){
-            list.add(s);
-        }
+    public void addStudent(Student student) {
+
+        if(! config.isClassLimitReached(studentList))
+            studentList.add(student);
+        else
+            System.out.println("Student limit reached");
     }
 
     @Override
     public void deleteStudent(int id) {
-        if(list.size() > 0){
-            int i = 0;
-            while(i < list.size()){
-                if(list.get(i).id == id){
-                    list.remove(i);
-                    break;
-                }
-                i++;
-            }
-        }
 
+        studentList.removeIf(s -> s.getId() == id);
     }
 
     @Override
     public boolean isStudentPassed(int id) {
-        int i = 0;
-        while(i < list.size()){
-            if(list.get(i).id == id){
-                return list.get(i).marks_obtained > passingMarks;
+        for(Student s: studentList)
+        {
+            if(s.getId()==id)
+            {
+                if(s.getMarks() >= config.getPassingMarks())
+                {
+                    return true;
+
+                }
             }
         }
         return false;
@@ -67,27 +53,17 @@ class StudentClassServiceImpl implements StudentClassService{
 
     @Override
     public Student getStudent(int id) {
-        int i = 0;
-        while(i < list.size()){
-            if(list.get(i).id == id){
-                return list.get(i);
-            }
+        for(Student s: studentList)
+        {
+            if(s.getId()==id)
+                return s;
         }
+
         return null;
     }
 
     @Override
     public List<Student> getAllStudents() {
-        return list;
-    }
-
-    @Override
-    public boolean isClassLimitReached(List<Student> studentList) {
-        return studentList.size() < allowedStudents;
-    }
-
-    @Override
-    public int getPassingMarks() {
-        return passingMarks;
+        return studentList;
     }
 }

@@ -1,15 +1,29 @@
 package com.mysite.core.services;
 
 public class Student {
-    public int id;
-    public String name;
-    public int age;
-    public int marks_obtained;
+    int id;
+    String name;
+    int age;
+    double marks;
 
-    public Student(int id, String name, int marks_obtained, int age){
-        this.id = id;
-        this.name = name;
-        this.marks_obtained = marks_obtained;
-        this.age = age;
+    public Student(int id ,String  name , int age , double marks ){
+        this.id=id;
+        this.name=name;
+        this.age=age;
+        this.marks=marks;
+    }
+
+    public String toString()
+    {
+        return "Name : "
+                +name+" Id : "+id+" Age : "+" Marks : "+marks;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public double getMarks() {
+        return marks;
     }
 }
+
